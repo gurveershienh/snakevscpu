@@ -42,7 +42,7 @@ pip install -r requirements.txt
 To start the game, just run:
 
 ```bash
-python main.py
+python src/main.py
 ```
 
 You’ll see:
