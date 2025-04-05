@@ -43,6 +43,7 @@ class Game:
 
                 self.check_death()
 
+            self.points = str(len(self.snake.body) - 3) 
             self.draw()
             
             pygame.display.update()
