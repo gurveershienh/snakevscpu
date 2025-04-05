@@ -19,7 +19,7 @@ Clone the repo and install the requirements (you *do* have Python, right?):
 
 ```bash
 git clone https://github.com/gurveershienh/snakevscpu.git
-cd snakevscpu
+cd snakevscpu/src
 ```
 
 Create a virtual environment (or live dangerously without one):
@@ -42,7 +42,7 @@ pip install -r requirements.txt
 To start the game, just run:
 
 ```bash
-python src/main.py
+python main.py
 ```
 
 You’ll see:
