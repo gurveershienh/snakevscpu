@@ -79,11 +79,11 @@ It uses **squared Euclidean distance** for fast calculation and purely local heu
 
 ---
 
-## Future updates
+## Final notes
 
 - Fruit can spawn near snake bodies, to be fixed
 - CPU snake occasionally self-sabotages (which is funny)
-- Smart snake algorithms and timed game mode to come
+- Smart snake algorithms (A*, BFS) and timed game mode to come
 
 ---
 
