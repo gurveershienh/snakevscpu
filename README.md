@@ -1,5 +1,5 @@
 # Snake vs CPU 🐍
-![Gameplay Demo](assets/snakevscpu_demo-ezgif.com-overlay.gif)
+![Gameplay Demo](assets/snakevscpu_demo.gif)
 It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built with `pygame-ce`, where your squishy human reflexes go head-to-head with a cold, calculating AI serpent who does not know mercy. **More features to come!**
 
 **Note:** The CPU snake is powered by a simple greedy algorithm. It moves fast, grows quickly, and can be outsmarted—if you survive long enough.
