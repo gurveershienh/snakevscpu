@@ -17,7 +17,7 @@ It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built 
 
 ---
 
-## 🛠 Installation
+## Installation
 
 Clone the repo and install the requirements:
 
@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🎮 Usage
+## Usage
 
 To start the game:
 
@@ -52,13 +52,13 @@ python main.py
 ```
 
 Gameplay Overview:
-- 🟦 Player Snake: you  
-- 🟩 CPU Snake: the rival  
-- 🔴 Fruit: grow fast, win faster  
+- Blue snake: You 
+- Green snake: Rival CPU 
+- Red fruit: grow fast, win faster  
 
 ---
 
-## 🎯 Controls
+## Controls
 
 - `W` / `↑` — Up  
 - `A` / `←` — Left  
