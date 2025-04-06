@@ -15,10 +15,10 @@ class Game:
         self.clock = pygame.time.Clock()
     
 
-        self.snake = Snake('green')
+        self.snake = Snake('aqua')
         self.fruit = Fruit()
         self.score = Score()
-        self.ai_snake = GreedySnake('orange')
+        self.ai_snake = GreedySnake('green')
         self.running = True
         self.points = str(len(self.snake.body) - 3)
     def run(self):
@@ -103,21 +103,19 @@ class Game:
 
     def check_death(self):
         if not 0 <= self.snake.body[0].x < self.cell_number or not 0 <= self.snake.body[0].y < self.cell_number:
-            self.snake = Snake('green')
+            self.snake = Snake('aqua')
         if self.snake.body[0] in self.ai_snake.body:
-            self.ai_snake.add_block = True
-            self.snake = Snake('green')
+            self.snake = Snake('aqua')
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
-                self.snake = Snake('green')
+                self.snake = Snake('aqua')
         if not 0 <= self.ai_snake.body[0].x < self.cell_number or not 0 <= self.ai_snake.body[0].y < self.cell_number:
-            self.ai_snake = GreedySnake('orange')
+            self.ai_snake = GreedySnake('green')
         if self.ai_snake.body[0] in self.snake.body:
-            self.snake.add_block = True
-            self.ai_snake = GreedySnake('orange')
+            self.ai_snake = GreedySnake('green')
         for block in self.ai_snake.body[1:]:
             if block == self.ai_snake.body[0]:
-                self.ai_snake = GreedySnake('orange')
+                self.ai_snake = GreedySnake('green')
 
     ##to implement random spawning 
     def spawn_snakes(player, snakes):
