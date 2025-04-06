@@ -1,55 +1,61 @@
-# Greedy Snake Showdown 🐍
+# Snake vs CPU 🐍
 
-It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built with `pygame-ce`, where your squishy human reflexes go head-to-head with a cold, calculating AI serpent who does not know mercy.
+It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built with `pygame-ce`, where your squishy human reflexes go head-to-head with a cold, calculating AI serpent who does not know mercy. **More features to come!**
 
-**Warning:** The CPU snake is OP and does not believe in fairness.
+**Note:** The CPU snake is powered by a simple greedy algorithm. It moves fast, grows quickly, and can be outsmarted—if you survive long enough.
 
-## 🐍 Features
+---
 
-- Classic Snake gameplay, but multiplayer(ish)
-- Greedy AI snake that hunts fruit like it owes it money
-- Basic score tracking (no trophies, just numbers)
-- Arcade-style visual with customizable snake colors
-- Built with `pygame-ce`, so it runs on actual pixels
-- BFS AI class ready to be implemented if you feel spicy
+## Features
+
+- Classic Snake gameplay with an AI twist  
+- CPU-controlled snake that aggressively targets fruit  
+- Real-time collision, fruit handling, and dynamic score tracking  
+- Modular code structure using object-oriented Python  
+- Built with `pygame-ce` for fast, frame-based game logic  
+
+---
 
 ## 🛠 Installation
 
-Clone the repo and install the requirements (you *do* have Python, right?):
+Clone the repo and install the requirements:
 
 ```bash
 git clone https://github.com/gurveershienh/snakevscpu.git
 cd snakevscpu/src
 ```
 
-Create a virtual environment (or live dangerously without one):
+Create a virtual environment:
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 ```
 
-Install the dependencies:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-> You’ll need `pygame-ce`. It's in the `requirements.txt`, don't worry.
+> `pygame-ce` is included in the requirements.
+
+---
 
 ## 🎮 Usage
 
-To start the game, just run:
+To start the game:
 
 ```bash
 python main.py
 ```
 
-You’ll see:
-- A green snake: you
-- An orange snake: your robot rival
-- A red fruit: the prize
-- Victory: unlikely
+Gameplay Overview:
+- 🟦 Player Snake: you  
+- 🟩 CPU Snake: the rival  
+- 🔴 Fruit: grow fast, win faster  
+
+---
 
 ## 🎯 Controls
 
@@ -58,34 +64,27 @@ You’ll see:
 - `S` / `↓` — Down  
 - `D` / `→` — Right  
 
-Avoid walls, your own body, and the AI snake who has no chill.
-
-## 🧠 AI Details
-
-- **GreedySnake**: Chooses the shortest path to the fruit without basic regard for consequences.
-- **GreedyBFSSnake**: Planned but not implemented. Probably less terrifying than the greedy one. Maybe.
-
-
-## 📁 Project Structure
-
-```
-.
-├── main.py           # Game loop and logic
-├── snake.py          # All snake classes, fruit, score, and unfinished dreams
-├── requirements.txt  # pygame-ce lives here
-└── assets/           # Fonts and any future graphics
-```
-
-## ❗️Known Issues
-
-- CPU snake sometimes wins at life. That’s not a bug, that’s just evolution.
-- Fruit can spawn close to snake bodies. Might fix, might not.
-- Score tracking is based on length difference, not skill.
-
-## 📜 License
-
-No license yet. Assume all rights reserved unless you're adding the BFS logic, in which case... carry on.
+Avoid walls, yourself, and your AI enemy.
 
 ---
 
-Enjoy the chaos. Try to win. You won't.
+## Greedy Snake AI
+
+The CPU snake uses a basic **greedy pathfinding algorithm**. On each update cycle, it evaluates available directions and chooses the one that brings it closest to the fruit while avoiding collisions with:
+- The board edges
+- Its own body
+- The player snake
+
+It uses **squared Euclidean distance** for fast calculation and purely local heuristics—no full pathfinding, no memory. It’s hungry and reckless. You’ll love it or hate it.
+
+---
+
+## Future updates
+
+- Fruit can spawn near snake bodies, to be fixed
+- CPU snake occasionally self-sabotages (which is funny)
+- Smart snake algorithms and timed game mode to come
+
+---
+
+Enjoy the chaos.
