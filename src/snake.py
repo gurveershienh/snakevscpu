@@ -1,32 +1,47 @@
+import time
 import pygame
 from pygame.math import Vector2
 from random import randint
 
-from abc import ABC, abstractmethod
-from collections import deque #stack for bfs
-
-class Fruit:
+class Grid:
     def __init__(self):
-        self.body = None
+        self.cell_size = 15
+        self.cell_number = 45
+        self.dimensions = self.cell_size * self.cell_number
+        
+        self.rects = self.build()
+
+    def build(self):
+        rects = []
+        for i in range(self.cell_number):
+            #create vertical lines
+            xpos = self.cell_size * i
+            ypos = 0
+            rect = pygame.Rect(xpos, ypos, 2, self.dimensions)
+            rects.append(rect)
+
+            #create horizontal lines
+            ypos = xpos
+            xpos = 0
+            rect = pygame.Rect(xpos, ypos, self.dimensions, 2)
+            rects.append(rect)
+        return rects
     
-    def draw(self, screen, size):
-        xpos = int(self.body.x * size)
-        ypos = int(self.body.y * size)
-        rect = pygame.Rect(xpos, ypos, size, size)
-        pygame.draw.rect(screen, 'red', rect)
-    
-    #need to implement check to prevent fruit spawning on snake
-    def randomize(self, num):
-        self.body = Vector2(randint(0, num - 2),randint(0, num - 2))
-        return self.body
+    def draw(self, screen):
+        for rect in self.rects:
+            pygame.draw.rect(screen, 'gray31', rect)
+
 class Snake:
-    def __init__(self, colour):
+    def __init__(self, colour, grid: Grid):
         self.colour = colour
         self.body = [Vector2((i,10)) for i in range(8, 5, -1)]
         self.head = self.body[0]
         self.add_block = False
         self.direction = Vector2(1,0)
         self.score = 0
+        self.size = grid.cell_size
+        self.spawn_time = time.time()
+        self.death_time = None
 
     #snakes with lazers???
     # def fire(self):
@@ -45,36 +60,24 @@ class Snake:
             self.body = body_copy[:]
 
 
-    def draw(self, screen, size):
+    def draw(self, screen):
         for index, block in enumerate(self.body):
-            xpos = int(block.x * size)
-            ypos = int(block.y * size)
+            xpos = int(block.x * self.size)
+            ypos = int(block.y * self.size)
 
-            rect = pygame.Rect(xpos, ypos, size, size)
+            rect = pygame.Rect(xpos, ypos, self.size, self.size)
             pygame.draw.rect(screen, self.colour, rect)
 
     def add_point(self):
         self.score += 1
 
-class AISnake(Snake, ABC):
-    def __init__(self, colour):
-        super().__init__(colour)
+
+class GreedySnake(Snake):
+    def __init__(self, colour, grid: Grid):
+        super().__init__(colour, grid)
         self.body = [Vector2((i,20)) for i in range(8, 5, -1)]
 
-    @abstractmethod
-    def decide_direction(self, fruit_pos, board_size, obstacles, player_snake=None):
-        pass
-
-class GreedySnake(AISnake):
-    def __init__(self, colour):
-        super().__init__(colour)
-
-        #adding turn cooldown to nerf greedy snake
-        #cooldown breaks greedy snake so set to 0
-        self.cooldown = 0
-        self.cooldown_lim = 0
-
-    def decide_direction(self, fruit_pos, board_size, obstacles, player_snake=None):
+    def decide_direction(self, fruit_pos, obstacles):
         head = self.body[0]
         directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]
         best_direction = self.direction
@@ -85,8 +88,8 @@ class GreedySnake(AISnake):
             if len(self.body) > 1 and new_pos == self.body[1]:
                 continue
             if (
-                not 0 <= new_pos.x < board_size or
-                not 0 <= new_pos.y < board_size or
+                not 0 <= new_pos.x < self.grid.dimensions or
+                not 0 <= new_pos.y < self.grid.dimensions or
                 new_pos in self.body or
                 new_pos in obstacles
             ):
@@ -98,28 +101,40 @@ class GreedySnake(AISnake):
 
         self.direction = best_direction
 
-##Greedy snake is too OP. BFS with turn cooldown might be balanced.
-##to be implemented
-class GreedyBFSSnake(AISnake):
-    def __init__(self):
-        super().__init__()
-        self.queued_direction = None
-        self.cooldown_lim = 2
-
-    def decide_direction(self, fruit_pos, board_size, obstacles, player_snake=None):
-        pass
-
-
+class Fruit:
+    def __init__(self, colour, grid: Grid):
+        self.body = None
+        self.colour = colour
+        self.size = grid.cell_size
+        self.boundary = grid.cell_number
+    
+    def draw(self, screen):
+        xpos = int(self.body.x * self.size)
+        ypos = int(self.body.y * self.size)
+        rect = pygame.Rect(xpos, ypos, self.size, self.size)
+        pygame.draw.rect(screen, self.colour, rect)
+    
+    def randomize(self, player: Snake, ai: Snake):
+        new_pos = Vector2(randint(0, self.boundary - 2),randint(0, self.boundary - 2))
+        while new_pos in player.body or new_pos in ai.body:
+            new_pos = Vector2(randint(0, self.boundary - 2),randint(0, self.boundary - 2))
+        self.body = new_pos
+  
+    
 
 ##only Score is called in game loop
 class Score:
-    def __init__(self):
-        self.text = pygame.font.Font("../assets/OpenSans-Regular.ttf", size=25)
+    def __init__(self, colour, font, grid: Grid):
+        self.font = font
+        self.colour = colour
+        self.text = pygame.font.Font(self.font, size=30)
+        self.boundary = grid.dimensions
+        self.points = None
 
-    def draw(self, screen: pygame.Surface, pos, points):
-        surface = self.text.render(points, True, 'white')
-        xpos = int(pos - 60)
-        ypos = int(pos - 40)
+    def draw(self, screen: pygame.Surface, points):
+        surface = self.text.render(points, True, self.colour)
+        xpos = int(self.boundary - 60)
+        ypos = int(self.boundary - 40)
         rect = surface.get_rect(center=(xpos,ypos))
         screen.blit(surface, rect)
 
