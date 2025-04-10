@@ -1,9 +1,9 @@
 # Snake vs CPU 🐍
 ![Gameplay Demo](assets/snakevscpu_demo.gif)
 
-It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built with `pygame-ce`, where your squishy human reflexes go head-to-head with a cold, calculating AI serpent who does not know mercy. **More features to come!**
+It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built with `pygame-ce`, where squishy human (blue) reflexes go head-to-head with a cold, calculating AI serpent (green) who does not know mercy.
 
-**Note:** The CPU snake is powered by a simple greedy algorithm. It moves fast, grows quickly, and can be outsmarted—if you survive long enough.
+The CPU snake is powered by a greedy algorithm. It moves fast, grows quickly, and can be outsmarted
 
 ---
 
@@ -36,10 +36,8 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 Install dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install pygame-ce
 ```
-
-> `pygame-ce` is included in the requirements.
 
 ---
 
@@ -54,7 +52,7 @@ python main.py
 Gameplay Overview:
 - Blue snake: You 
 - Green snake: Rival CPU 
-- Red fruit: grow fast, win faster  
+- Red fruit: Yummy
 
 ---
 
@@ -71,21 +69,9 @@ Avoid walls, yourself, and your AI enemy.
 
 ## Greedy Snake AI
 
-The CPU snake uses a basic **greedy pathfinding algorithm**. On each update cycle, it evaluates available directions and chooses the one that brings it closest to the fruit while avoiding collisions with:
+The CPU snake uses a **greedy pathfinding algorithm**. On each update cycle, it evaluates available directions and chooses the one that brings it closest to the fruit while avoiding collisions with:
 - The board edges
 - Its own body
 - The player snake
 
-It uses **squared Euclidean distance** for fast calculation and purely local heuristics—no full pathfinding, no memory. It’s hungry and reckless. You’ll love it or hate it.
-
----
-
-## Final notes
-
-- Fruit can spawn near snake bodies, to be fixed
-- CPU snake occasionally self-sabotages (which is funny)
-- Smart snake algorithms (A*, BFS) and timed game mode to come
-
----
-
-Enjoy the chaos.
+It uses **squared Euclidean distance** for fast calculation and purely local heuristics—no full pathfinding, no memory. It’s hungry and reckless.
