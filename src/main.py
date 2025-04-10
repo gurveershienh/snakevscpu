@@ -21,32 +21,40 @@ class Game:
             grid=self.grid
             )
         
+        self.player_score = Score(
+            colour='white',
+            font="../assets/PressStart2P-Regular.ttf",
+            xpos=self.grid.dimensions - 615,
+            ypos=self.grid.dimensions - 30,
+            text='you'
+        )
+        
         self.ai = GreedySnake(
             colour='green',
             grid=self.grid
             )
         
+        self.ai_score = Score(
+            colour='white',
+            font="../assets/PressStart2P-Regular.ttf",
+            xpos=self.grid.dimensions - 60,
+            ypos=self.grid.dimensions - 30,
+            text='cpu'
+        )
         self.fruit = Fruit(
             colour='red',
             grid=self.grid
         )
 
-        self.score = Score(
-            colour='white',
-            font="../assets/OpenSans-Regular.ttf",
-            grid=self.grid
-        )
-
+        self.fruit.randomize(self.player, self.ai)
 
         self.running = True
-        self.points = str(len(self.player.body) - 3)
 
     def run(self):
   
         SCREEN_UPDATE = pygame.USEREVENT
         pygame.time.set_timer(SCREEN_UPDATE, 80)
 
-        self.fruit.randomize(self.player, self.ai)
 
         while self.running:
             for event in pygame.event.get():
@@ -61,9 +69,9 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     self.check_input(event)
 
-                self.check_death()
-
-            self.points = str(len(self.snake.body) - 3) 
+                self.check_ai_death()
+                self.check_player_death()
+ 
             self.draw()
             
             pygame.display.update()
@@ -71,60 +79,94 @@ class Game:
 
     def draw(self):
             self.screen.fill('black')
+            self.player_score.draw(self.screen, self.player.points)
+            self.ai_score.draw(self.screen, self.ai.points)
+
             self.player.draw(self.screen)
+            
+
             self.ai.draw(self.screen)
+            
+
             self.fruit.draw(self.screen)
-            self.score.draw(self.screen, self.points)
+
 
     def update(self):
-        obstacles = self.snake.body + self.ai.body[1:]
-        self.snake.update(self.screen)
+        obstacles = self.player.body + self.ai.body[1:]
+        self.player.update()
         
-        self.ai_snake.decide_direction(self.fruit.body, self.cell_number, obstacles=obstacles)
-        self.ai_snake.cooldown = self.ai_snake.cooldown_lim
-        self.ai_snake.update(self.screen)
+        self.ai.decide_direction(self.fruit.body, obstacles=obstacles)
+        self.ai.update()
     
     def check_munch(self):
         if self.player.body[0].x == self.fruit.body.x and self.player.body[0].y == self.fruit.body.y:
-            self.snake.add_block = True
-            self.fruit.randomize(self.cell_number)
-        if self.ai_snake.body[0].x == self.fruit.body.x and self.ai_snake.body[0].y == self.fruit.body.y:
-            self.ai_snake.add_block = True
-            self.fruit.randomize(self.cell_number)
+            self.player.add_block = True
+            self.fruit.randomize(self.player, self.ai)
+        if self.ai.body[0].x == self.fruit.body.x and self.ai.body[0].y == self.fruit.body.y:
+            self.ai.add_block = True
+            self.fruit.randomize(self.player, self.ai)
 
     def check_input(self, event):
         up, down, left, right = (Vector2(0,-1), Vector2(0,1), Vector2(-1,0), Vector2(1,0))
         if event.key == pygame.K_w or event.key == pygame.K_UP:
-            if not self.snake.direction == down:
-                self.snake.direction = up
+            if not self.player.direction == down:
+                self.player.direction = up
         if event.key == pygame.K_s or event.key == pygame.K_DOWN:
-            if not self.snake.direction == up:
-                self.snake.direction = down
+            if not self.player.direction == up:
+                self.player.direction = down
         if event.key == pygame.K_a or event.key == pygame.K_LEFT:
-            if not self.snake.direction == right:
-                self.snake.direction = left
+            if not self.player.direction == right:
+                self.player.direction = left
         if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-            if not self.snake.direction == left:
-                self.snake.direction = right
+            if not self.player.direction == left:
+                self.player.direction = right
 
-    def check_death(self):
-        if not 0 <= self.snake.body[0].x < self.cell_number or not 0 <= self.snake.body[0].y < self.cell_number:
-            self.snake = Snake('aqua')
-        if self.snake.body[0] in self.ai_snake.body:
-            self.snake = Snake('aqua')
-        for block in self.snake.body[1:]:
-            if block == self.snake.body[0]:
-                self.snake = Snake('aqua')
-        if not 0 <= self.ai_snake.body[0].x < self.cell_number or not 0 <= self.ai_snake.body[0].y < self.cell_number:
-            self.ai_snake = GreedySnake('green')
-            self.stamp_death('AI snake death')
-        if self.ai_snake.body[0] in self.snake.body:
-            self.ai_snake = GreedySnake('green')
-            self.stamp_death('AI snake death')
-        for block in self.ai_snake.body[1:]:
-            if block == self.ai_snake.body[0]:
-                self.ai_snake = GreedySnake('green')
-                self.stamp_death('AI snake death')
+    def check_player_death(self):
+        if (
+            not 0 <= self.player.body[0].x < self.grid.cell_number or 
+            not 0 <= self.player.body[0].y < self.grid.cell_number
+        ):
+            print('player-boundary')
+            self.player = Snake(
+                            colour='aqua',
+                            grid=self.grid
+                        )
+        if self.player.body[0] in self.ai.body:
+            print('player-crash')
+            self.player = Snake(
+                            colour='aqua',
+                            grid=self.grid
+                        )
+        for block in self.player.body[1:]:
+            if block == self.player.body[0]:
+                print('player-suicide')
+                self.player = Snake(
+                            colour='aqua',
+                            grid=self.grid
+                        )
+    def check_ai_death(self):
+        if (
+            not 0 <= self.ai.body[0].x < self.grid.cell_number or 
+            not 0 <= self.ai.body[0].y < self.grid.cell_number
+        ):
+            print('ai-boundary')
+            self.ai = GreedySnake(
+                            colour='green',
+                            grid=self.grid
+                        )
+        if self.ai.body[0] in self.player.body:
+            print('ai-crash')
+            self.ai = GreedySnake(
+                            colour='green',
+                            grid=self.grid
+                        )
+        for block in self.ai.body[1:]:
+            if block == self.ai.body[0]:
+                print('ai-suicide')
+                self.ai = GreedySnake(
+                            colour='green',
+                            grid=self.grid
+                        )
 
     def stamp_death(self, msg):
         self.death_time = time.time()
@@ -132,9 +174,6 @@ class Game:
         print(self.death_time - self.spawn_time)
         self.spawn_time = self.death_time
 
-    ##to implement random spawning 
-    def spawn_snakes(player, snakes):
-        pass
 if __name__ == '__main__':
     game = Game()
     game.run()

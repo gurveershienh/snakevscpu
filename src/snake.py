@@ -9,7 +9,7 @@ class Grid:
         self.cell_number = 45
         self.dimensions = self.cell_size * self.cell_number
         
-        self.rects = self.build()
+        self.rects = None
 
     def build(self):
         rects = []
@@ -17,7 +17,7 @@ class Grid:
             #create vertical lines
             xpos = self.cell_size * i
             ypos = 0
-            rect = pygame.Rect(xpos, ypos, 2, self.dimensions)
+            rect = pygame.Rect(xpos, ypos, 1, self.dimensions)
             rects.append(rect)
 
             #create horizontal lines
@@ -31,24 +31,42 @@ class Grid:
         for rect in self.rects:
             pygame.draw.rect(screen, 'gray31', rect)
 
+class Score:
+    def __init__(self, colour, font, xpos, ypos, text):
+        self.text = text
+        self.colour = colour
+        self.font = pygame.font.Font(font, size=20)
+        self.xpos = xpos
+        self.ypos = ypos
+
+    def draw(self, screen: pygame.Surface, points):
+        top_surface = self.font.render(self.text, True, self.colour)
+        top_rect = top_surface.get_rect(center=(self.xpos,self.ypos))
+
+        bottom_surface = self.font.render(points, True, self.colour)
+        bottom_rect = bottom_surface.get_rect(center=(self.xpos,self.ypos-30))
+        screen.blit(top_surface, top_rect)
+        screen.blit(bottom_surface, bottom_rect)
+
 class Snake:
     def __init__(self, colour, grid: Grid):
-        self.colour = colour
+        
         self.body = [Vector2((i,10)) for i in range(8, 5, -1)]
+        print(self.body)
         self.head = self.body[0]
         self.add_block = False
         self.direction = Vector2(1,0)
-        self.score = 0
-        self.size = grid.cell_size
-        self.spawn_time = time.time()
-        self.death_time = None
 
+        self.colour = colour
+        self.size = grid.cell_size
+        self.points = str(len(self.body) - 3)
+        self.grid = grid
     #snakes with lazers???
     # def fire(self):
-    #     lazer = pygame.Rect(self.head.x,self.head.y, cell_size / 4, cell_size / 2)
+    #     lazer = pygame.Rect(self.head.x,self.head.y, self.size / 4, self.size / 2)
     #     lazer
 
-    def update(self, screen):
+    def update(self):
         if self.add_block:
             body_copy = self.body[:]
             body_copy.insert(0, body_copy[0] + self.direction)
@@ -58,18 +76,15 @@ class Snake:
             body_copy = self.body[:-1]
             body_copy.insert(0, body_copy[0] + self.direction)
             self.body = body_copy[:]
-
+        self.points = str(len(self.body) - 3)
 
     def draw(self, screen):
-        for index, block in enumerate(self.body):
+        for block in self.body:
             xpos = int(block.x * self.size)
             ypos = int(block.y * self.size)
-
             rect = pygame.Rect(xpos, ypos, self.size, self.size)
             pygame.draw.rect(screen, self.colour, rect)
 
-    def add_point(self):
-        self.score += 1
 
 
 class GreedySnake(Snake):
@@ -123,20 +138,6 @@ class Fruit:
     
 
 ##only Score is called in game loop
-class Score:
-    def __init__(self, colour, font, grid: Grid):
-        self.font = font
-        self.colour = colour
-        self.text = pygame.font.Font(self.font, size=30)
-        self.boundary = grid.dimensions
-        self.points = None
-
-    def draw(self, screen: pygame.Surface, points):
-        surface = self.text.render(points, True, self.colour)
-        xpos = int(self.boundary - 60)
-        ypos = int(self.boundary - 40)
-        rect = surface.get_rect(center=(xpos,ypos))
-        screen.blit(surface, rect)
 
 ##to be implemented
 class Title:
