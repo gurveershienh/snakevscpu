@@ -1,5 +1,5 @@
 # Snake vs CPU 🐍
-![Gameplay Demo](assets/snakevscpu_demo.gif)
+![Gameplay Demo](src/assets/snakevscpu_demo.gif)
 
 It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built with `pygame-ce`, where squishy human (blue) reflexes go head-to-head with a cold, calculating AI serpent (green) who does not know mercy.
 

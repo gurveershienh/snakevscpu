@@ -1,8 +1,11 @@
 import time
 import sys
 import pygame
+import asyncio
 from snake import Grid, Snake, Score, Fruit, GreedySnake
 from pygame.math import Vector2
+
+
 
 class Game:
     
@@ -10,7 +13,7 @@ class Game:
 
         pygame.init()
 
-
+        self.font = pygame.font.Font("assets/PressStart2P-Regular.ttf")
         self.grid = Grid()
         self.screen = pygame.display.set_mode((self.grid.dimensions, self.grid.dimensions))
         self.clock = pygame.time.Clock()
@@ -23,7 +26,7 @@ class Game:
         
         self.player_score = Score(
             colour='white',
-            font="../assets/PressStart2P-Regular.ttf",
+            font=self.font,
             xpos=self.grid.dimensions - 615,
             ypos=self.grid.dimensions - 30,
             text='you'
@@ -36,7 +39,7 @@ class Game:
         
         self.ai_score = Score(
             colour='white',
-            font="../assets/PressStart2P-Regular.ttf",
+            font=self.font,
             xpos=self.grid.dimensions - 60,
             ypos=self.grid.dimensions - 30,
             text='cpu'
@@ -50,32 +53,6 @@ class Game:
 
         self.running = True
 
-    def run(self):
-  
-        SCREEN_UPDATE = pygame.USEREVENT
-        pygame.time.set_timer(SCREEN_UPDATE, 80)
-
-
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit(1)
-                if event.type == SCREEN_UPDATE:
-                    self.update()
-
-                self.check_munch()
-
-                if event.type == pygame.KEYDOWN:
-                    self.check_input(event)
-
-                self.check_ai_death()
-                self.check_player_death()
- 
-            self.draw()
-            
-            pygame.display.update()
-            self.clock.tick(60)
 
     def draw(self):
             self.screen.fill('black')
@@ -174,6 +151,35 @@ class Game:
         print(self.death_time - self.spawn_time)
         self.spawn_time = self.death_time
 
-if __name__ == '__main__':
+
+async def main():
+
     game = Game()
-    game.run()
+
+    SCREEN_UPDATE = pygame.USEREVENT
+    pygame.time.set_timer(SCREEN_UPDATE, 80)
+
+
+    while game.running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(1)
+            if event.type == SCREEN_UPDATE:
+                game.update()
+
+            game.check_munch()
+
+            if event.type == pygame.KEYDOWN:
+                game.check_input(event)
+
+            game.check_ai_death()
+            game.check_player_death()
+
+        game.draw()
+        
+        pygame.display.update()
+        game.clock.tick(60)
+        await asyncio.sleep(0)
+
+asyncio.run(main())

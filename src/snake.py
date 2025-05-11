@@ -32,10 +32,10 @@ class Grid:
             pygame.draw.rect(screen, 'gray31', rect)
 
 class Score:
-    def __init__(self, colour, font, xpos, ypos, text):
+    def __init__(self, colour, font: pygame.font.Font, xpos, ypos, text):
         self.text = text
         self.colour = colour
-        self.font = pygame.font.Font(font, size=20)
+        self.font = font
         self.xpos = xpos
         self.ypos = ypos
 
