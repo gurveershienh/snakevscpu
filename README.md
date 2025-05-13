@@ -5,6 +5,10 @@ It’s Snake. But not just *any* snake. This is **Player vs. CPU Snake**, built 
 
 The CPU snake is powered by a greedy algorithm. It moves fast, grows quickly, and can be outsmarted
 
+Play it here ---> https://gurveershienh.github.io/snakevscpu/
+
+Compiled to  WebAssembly using pygbag
+
 ---
 
 ## Features
@@ -16,37 +20,6 @@ The CPU snake is powered by a greedy algorithm. It moves fast, grows quickly, an
 - Built with `pygame-ce` for fast, frame-based game logic  
 
 ---
-
-## Installation
-
-Clone the repo and install the requirements:
-
-```bash
-git clone https://github.com/gurveershienh/snakevscpu.git
-cd snakevscpu/src
-```
-
-Create a virtual environment:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-```
-
-Install dependencies:
-
-```bash
-pip install pygame-ce
-```
-
----
-
-## Usage
-
-To start the game:
-
-```bash
-python main.py
 ```
 
 Gameplay Overview:
