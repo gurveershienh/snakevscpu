@@ -157,7 +157,7 @@ async def main():
     game = Game()
 
     SCREEN_UPDATE = pygame.USEREVENT
-    pygame.time.set_timer(SCREEN_UPDATE, 80)
+    pygame.time.set_timer(SCREEN_UPDATE, 60)
 
 
     while game.running:
