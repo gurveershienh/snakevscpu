@@ -20,7 +20,6 @@ Compiled to  WebAssembly using pygbag
 - Built with `pygame-ce` for fast, frame-based game logic  
 
 ---
-```
 
 Gameplay Overview:
 - Blue snake: You 
